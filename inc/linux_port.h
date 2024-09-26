@@ -1,4 +1,4 @@
-#define BOOL int
+#define int int
 #define INT int
 #define LONG long
 #define BYTE unsigned char

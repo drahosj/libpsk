@@ -57,7 +57,7 @@ public:
 // PSK31 and CW modulator
 	void InitPSKMod(INT Fs, double MaxAmplitude);
 	void CalcPSK( double* pData , INT n, INT stride);
-	void PutTxQue(INT txchar, BOOL cntrl );
+	void PutTxQue(INT txchar, int cntrl );
 	void ClrQue();
 	void SetCWIDSpeed(LONG speed);
 	INT GetTXCharsRemaining();
@@ -68,8 +68,8 @@ public:
 		m_PSKPhaseInc = m_2PI * m_TxFreq / m_SampleFreq;
 	}
 	void SetTXMode(INT mode);
-	void SetAutoShutoff(BOOL val){m_NeedShutoff = val;}
-	void SetAutoCWID(BOOL val){ m_NeedCWid = val;}
+	void SetAutoShutoff(int val){m_NeedShutoff = val;}
+	void SetAutoCWID(int val){ m_NeedCWid = val;}
 	INT GetTXState(){return m_TXState;}
 	void SetSampleClkAdj(INT ppm){m_ClkError = 1.0;};
 //	void SetSampleClkAdj(INT ppm){m_ClkError = 1.0 - (double)ppm/1000000.0;};
@@ -81,15 +81,15 @@ public:
 //	HWND m_hWnd;
 
 private:
-	BOOL m_PSK63Mode;
-	BOOL m_PSK125Mode;		//AA6YQ 1.21
-	BOOL m_SatMode;
-	BOOL m_NoSquelchTail;
-	BOOL m_NeedCWid;
-	BOOL m_NeedShutoff;
-	BOOL m_TempNoSquelchTail;
-	BOOL m_TempNeedCWid;
-	BOOL m_TempNeedShutoff;
+	int m_PSK63Mode;
+	int m_PSK125Mode;		//AA6YQ 1.21
+	int m_SatMode;
+	int m_NoSquelchTail;
+	int m_NeedCWid;
+	int m_NeedShutoff;
+	int m_TempNoSquelchTail;
+	int m_TempNeedCWid;
+	int m_TempNeedShutoff;
 	LONG m_IQPhaseArray[20];
 	INT m_Fs;
 	INT m_CWIDSpeed;
@@ -111,7 +111,7 @@ private:
 	PINT m_pXmitQue;
 //	CString m_CWIdString;
 // PSK31 and CW generator variables
-	BOOL m_AddEndingZero;
+	int m_AddEndingZero;
 	BYTE m_PresentPhase;
 	BYTE m_Lastsymb;
 	WORD m_TxShiftReg;

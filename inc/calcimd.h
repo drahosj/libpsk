@@ -35,8 +35,8 @@ class CCalcIMD
 {
 public:
 	void ResetIMDEnergies();
-	BOOL CalcIMDEnergies(_complex samp);
-	BOOL CalcIMDValue( INT &imdval);
+	int CalcIMDEnergies(_complex samp);
+	int CalcIMDValue( INT &imdval);
 	CCalcIMD();
 	virtual ~CCalcIMD();
 

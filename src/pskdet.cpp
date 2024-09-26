@@ -565,9 +565,9 @@ double mag;
 // Sums up the energy at each sample time, averages it, and picks the
 //   sample time with the highest energy content.
 //////////////////////////////////////////////////////////////////////
-BOOL CPSKDet::SymbSync(_complex sample)
+int CPSKDet::SymbSync(_complex sample)
 {
-BOOL Trigger=FALSE;
+int Trigger=FALSE;
 double max;
 double energy;
 INT BitPos = m_BitPos;
@@ -646,8 +646,8 @@ _complex vect;
 double angle;
 double energy;
 BYTE ch = 0;
-BOOL bit;
-BOOL GotChar = FALSE;
+int bit;
+int GotChar = FALSE;
 	m_I1 = m_I0;		//form the multi delayed symbol samples
 	m_Q1 = m_Q0;
 	m_I0 = newsamp.x;
@@ -687,7 +687,7 @@ BOOL GotChar = FALSE;
 	{
 		//calc BPSK symbol over 2 chips
 		vect.y = m_I1 * m_I0 +  m_Q1 * m_Q0;
-		bit = (BOOL)(vect.y > 0.0);
+		bit = (int)(vect.y > 0.0);
 	}
 	else
 		bit = ViterbiDecode( angle );
@@ -889,7 +889,7 @@ _complex* Firptr;
 ///////////////////////////////////////////////////////////////////////
 // Soft-decision Viterbi decoder function.
 ///////////////////////////////////////////////////////////////////////
-BOOL CPSKDet::ViterbiDecode( double newangle)
+int CPSKDet::ViterbiDecode( double newangle)
 {
 double pathdist[32];
 double min;

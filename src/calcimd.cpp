@@ -83,7 +83,7 @@ CCalcIMD::~CCalcIMD()
 //   3rd order product=F2(46.875)
 //  It is called with complex data samples at 500 Hz.
 //////////////////////////////////////////////////////////////////
-BOOL CCalcIMD::CalcIMDEnergies(_complex samp)
+int CCalcIMD::CalcIMDEnergies(_complex samp)
 {
 INT i;
 _complex temp;
@@ -113,7 +113,7 @@ _complex temp;
 //   carrier=F0(15.625), noise=F1(31.25), and 
 //   3rd order product=F2(46.875)
 //////////////////////////////////////////////////////////////////
-BOOL CCalcIMD::CalcIMDValue( INT &imdval)
+int CCalcIMD::CalcIMDValue( INT &imdval)
 {
 	m_Snr = 10.0*log10(m_Energy[0]/m_Energy[1]);
 	m_Imd = 10.0*log10(m_Energy[2]/m_Energy[0]);

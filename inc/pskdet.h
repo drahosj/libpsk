@@ -110,21 +110,21 @@ private:
 	void CalcAGC( _complex Samp );
 	char DecodeSymb( _complex newsamp );
 	void CalcQuality(double angle );
-	BOOL ViterbiDecode( double newangle);
-	BOOL SymbSync(_complex sample);
+	int ViterbiDecode( double newangle);
+	int SymbSync(_complex sample);
 	double CalcDistance( _complex newsymb, BYTE symb);
 	void CalcFreqError( _complex IQ );
 	void CalcFFreqError( _complex IQ );
 // other classes
 	CCalcIMD CalcIMD;
 //variables
-	BOOL m_FastAFCMode;
-	BOOL m_AFCCaptureOn;
-	BOOL m_IMDValid;
-	BOOL m_SQOpen;
-	BOOL m_LastBitZero;
-	BOOL m_PSK63Mode;
-	BOOL m_PSK125Mode;				//AA6YQ 1.21
+	int m_FastAFCMode;
+	int m_AFCCaptureOn;
+	int m_IMDValid;
+	int m_SQOpen;
+	int m_LastBitZero;
+	int m_PSK63Mode;
+	int m_PSK125Mode;				//AA6YQ 1.21
 	BYTE m_VaricodeDecTbl[2048];
 	WORD m_BitAcc;
 	LONG m_IQPhaseArray[20];
