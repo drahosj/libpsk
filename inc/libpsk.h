@@ -1,4 +1,7 @@
 /**
+ *
+ * libpsk.h: Header for LibPSK C API
+ *
  * (C) 2024 Jake Drahos <j@kedrahos.com>
  *
  *  This library is free software; you can redistribute it and/or
@@ -16,7 +19,6 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  
  *  02110-1301  USA
  *
- *  LibPSK API header.
  */
 
 #ifndef _libpsk_h
