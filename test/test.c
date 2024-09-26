@@ -42,7 +42,9 @@ void runRx(void * det, int sec)
 
 int main(int argc, char ** argv)
 {
-    if (argc > 1 && !strcmp(argv[1], "rx")) {
+    setbuf(stdout, NULL);
+    setbuf(stdin, NULL);
+    if (argc > 1 && strcmp(argv[1], "tx")) {
         /*
         void * mod = createPSKMod(8000, 1.0);
         mod.SetTXFrequency(800);
