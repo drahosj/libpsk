@@ -4,5 +4,5 @@
 *.a
 test/test
 test/pskrecv
-test/psktran
+test/psktrans
 doc

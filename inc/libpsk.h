@@ -134,7 +134,7 @@ void psk_d_free(PSK_DET det);
  * \param fs Sample rate
  * \param frequency Center frequency
  * \param mode PSK mode (PSK_MODE_BPSK31)
- * \param flags PSK_TX_AUTOSTOP | PSK_TX_ADDCWID | PSK_TX_NOSQLTAIL
+ * \param flags PSK_MOD_AUTOSTOP | PSK_MOD_ADDCWID | PSK_MOD_NOSQLTAIL
  * 
  * \return Allocated PSK_MOD
  */
@@ -178,6 +178,17 @@ void psk_m_run(PSK_MOD mod, int16_t * buf, int samples, int stride);
  * \brief Deallocate modulator
  */
 void psk_m_free(PSK_MOD mod);
+
+/**
+ * \brief Is TX busy
+ * 
+ * Quick and dirty way to determine if modulator is busy. Guesses
+ * based on queue state. If queue is empty, it's probably wrapping up and
+ * can safely be shut down after allowing time for any postamble etc.
+ * 
+ * \return 1 if queue is non-empty, 0 if empty
+ */
+int psk_m_active(PSK_MOD mod);
 
 #ifdef __cplusplus
 }

@@ -74,6 +74,9 @@ public:
 	void SetSampleClkAdj(int ppm){m_ClkError = 1.0;};
 //	void SetSampleClkAdj(int ppm){m_ClkError = 1.0 - (double)ppm/1000000.0;};
 	void GetVectorData(long* VectData);
+	int GetQueueEmpty() {
+		return m_pHead == m_pTail;
+	}
 
 	getNextCharCallback getNextChar = nullptr;
 

@@ -83,12 +83,16 @@ int psk_m_puts(PSK_MOD mod, char * s) {
 void psk_m_run(PSK_MOD mod, int16_t * buf, int samples, int stride) {
     /* Hack: underlying stride is whack for some reason; has a stride of 2...*/
     double * new_buf = (double *) malloc(sizeof(double) * samples * 2);
-    CalcPSK(mod, new_buf, samples, 1);
+    CalcPSK(mod, new_buf, samples * 2, 1);
     for (int i = 0; i < samples; i++) {
         buf[i * stride] = (int16_t) (new_buf[i * 2] * 30000.);
     }
     free(new_buf);
     return;
+}
+
+int psk_m_active(PSK_MOD mod) {
+    return ! ((CPSKMod *) mod)->GetQueueEmpty();
 }
 
 void psk_m_free(PSK_MOD mod) {
