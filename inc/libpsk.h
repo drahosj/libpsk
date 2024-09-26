@@ -1,7 +1,10 @@
 /**
+ * \file libpsk.h
+ * 
+ * \brief libpsk.h: Header for LibPSK C API
  *
- * libpsk.h: Header for LibPSK C API
- *
+ * \copyright 
+ * 
  * (C) 2024 Jake Drahos <j@kedrahos.com>
  *
  *  This library is free software; you can redistribute it and/or
@@ -33,11 +36,11 @@
 #define PSK_MODE_PSK63 8
 #define PSK_MODE_PSK125 16
 
-#define PSK_SQL_THRESH_DEF 50
+#define PSK_SQL_THRESH_DEF 0
 
-#define PSK_SQL_SPEED_DEF 75
-#define PSK_SQL_FAST 0
-#define PSK_SQL_LOW 1
+#define PSK_SQL_SPEED_DEF 10
+#define PSK_SQL_FAST 20
+#define PSK_SQL_LOW 75
 
 #define PSK_AFC_OFF 0
 #define PSK_AFC_DEF -1
@@ -51,6 +54,21 @@ typedef void * PSK_MOD;
 typedef void * PSK_DET;
 
 /* LibPSK API */
+
+/**
+ * \brief Create RX
+ *
+ * Create and configure a PSK detector (rx)
+ *
+ * \param fs Sample rate in samples/s
+ * \param frequency Center frequency in Hz
+ * \param mode (default PSK_MODE_PSK31)
+ * \param squelch_thresh (default PSK_SQL_THRESH_DEF)
+ * \param squelch_speed (default PSK_SQL_SPEED_DEF)
+ * \param afc_limit (default PSK_AFC_DEF)
+ * 
+ * \return New PSK_DET
+ */
 PSK_DET psk_d_create(int fs, 
 			 int frequency,
 			 int mode,
@@ -58,10 +76,46 @@ PSK_DET psk_d_create(int fs,
 			 int squelch_speed,
 			 int afc_limit);
 
-void psk_d_set_squelch(PSK_DET det, int limit);
+/**
+ * \brief Set squelch
+ * 
+ * Squelch can be set at runtime probably without breaking anything
+ * 
+ * \param det Detector instance
+ * \param thresh Threshold (0-100ish), or PSK_SQL_THRESH_DEF
+ * \param speed Squelch speed (0-100ish), or PSK_SQL_SPEED_ FAST, SLOW, DEF.
+ */
+void psk_d_set_squelch(PSK_DET det, int thresh, int speed);
+
+/**
+ * \brief Set Automatic Frequency Correction
+ * 
+ * \param det Detector instance
+ * \param limit AFC limit
+ */
 void psk_d_set_afc(PSK_DET det, int limit);
 
-int psk_d_run(PSK_DET det, int16_t * in_buf, int samples, int stride, char * res, int res_len);
+/**
+ * \brief Run a batch of samples
+ * 
+ * Note that samples is an array of 16-bit values. Expected number of samples
+ * is samples * stride. The total number of bytes read is 2 * samples * stride.
+ * 
+ * Calculate the output array size to agree with the maximum number of samples
+ * per batch to avoid overruns. 
+ * 
+ * \param det Detector instance
+ * \param in_buf Buffer of signed 16 bit samples (native endianness).
+ * \param sapmples Number of samples
+ * \param stride Interlace samples for eg. stereo (default 1 for mono)
+ * \param res Result buffer of decoded characters
+ * \param res_len Maximum capacity of result buffer
+ * 
+ * \return Number of characters written to res, or -1 if overrun. In 
+ * case of overrun, the number of valid in result buffer is necessarily res_len
+ */
+int psk_d_run(PSK_DET det, int16_t * in_buf, int samples, 
+				int stride, char * res, int res_len);
 
 #ifdef __cplusplus
 }

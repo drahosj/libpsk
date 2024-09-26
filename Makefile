@@ -34,7 +34,7 @@ libpsk.o
 _HEADERS=$(addprefix inc/,$(HEADERS))
 _SOURCES=$(addprefix inc/,$(HEADERS))
 
-all: $(PROGRAM) $(_HEADERS) $(_SOURCES)
+all: $(PROGRAM) $(_HEADERS) $(_SOURCES) doc
 
 $(PROGRAM): $(OBJS)
 	$(LINK) -shared -z noexecstack -o $(PROGRAM) $(OBJS) $(LIBS)
@@ -42,6 +42,15 @@ $(PROGRAM): $(OBJS)
 %.o: src/%.cpp
 	$(COMPILE) $(OPTIONS) -c -o $@ $<
 
+doc: inc/libpsk.h doxygen.conf
+	doxygen doxygen.conf
+
 clean:
 	-rm -f *.o
 	-rm -f $(PROGRAM)
+
+test: $(PROGRAM)
+	cd test && make run
+
+dist-clean: clean
+	-rm -rf doc

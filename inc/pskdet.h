@@ -93,13 +93,7 @@ public:
 	void SetSquelchThresh(int thresh,int speed)
 	{
 		m_SQThresh = thresh;
-		if( speed == SQMODEFAST )
-			m_SquelchSpeed = 20;
-		else
-			if( speed == SQMODESLOW )
-				m_SquelchSpeed = 75;
-			else
-				m_SquelchSpeed = speed;
+		m_SquelchSpeed = speed;
 	};
 //public variables
 	

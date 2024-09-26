@@ -286,6 +286,7 @@ void CPSKDet::ResetDetector()
 int CPSKDet::ProcPSKDet( double* pIn,int nSamples,int stride,char* result,int resultLen)
 {
 	int ret = 0;
+	int overrun = 0;
 	int i,j;
 	const double* Kptr;
 	_complex acc;
@@ -369,11 +370,14 @@ int CPSKDet::ProcPSKDet( double* pIn,int nSamples,int stride,char* result,int re
 				if (SymbSync(m_BitSignal))
 				{
 					char r= DecodeSymb(m_BitSignal);
+					if (r!= 0 && ret == resultLen) {
+						overrun = 1;
+					}
 					if (r!=0 && ret < resultLen)
 					{
 						ret++;
 						*(result++) = r;
-					}
+					} 
 				}
 // Calculate IMD if only idles have been received and the energies collected
 				if( m_IMDValid  )
@@ -399,7 +403,7 @@ int CPSKDet::ProcPSKDet( double* pIn,int nSamples,int stride,char* result,int re
 	m_VcoPhz = vcophz;
 	m_RxFrequency = (int)(0.5+((m_NCOphzinc + m_FreqError)*m_SampleFreq/PI2 ) );
 //	m_RxFrequency = (int)(0.5+((m_NCOphzinc)*m_SampleFreq/PI2 ) );
-	return ret;
+	return overrun ? -1 : ret;
 }
 
 //////////////////////////////////////////////////////////////////////
