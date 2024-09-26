@@ -3,7 +3,7 @@
 #
 CC=c++
 LINK=c++
-OPTIONS=-g -fPIC -O3 -std=gnu++11
+OPTIONS=-g -fPIC -std=gnu++11
 
 INCLUDES=-Iinc
 CFLAGS="-DPSKCORE_EXPORTS"
@@ -22,12 +22,14 @@ pskdettbl.h \
 psktables.h \
 pskmod.h \
 targetver.h \
-pskcoresdr.h
+pskcoresdr.h \
+libpsk.h
 
 OBJS= calcimd.o \
 pskdet.o \
 pskmod.o \
-pskcoresdr.o
+pskcoresdr.o \
+libpsk.o
 
 _HEADERS=$(addprefix inc/,$(HEADERS))
 _SOURCES=$(addprefix inc/,$(HEADERS))

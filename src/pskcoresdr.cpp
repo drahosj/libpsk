@@ -25,7 +25,10 @@
 #include "pskdet.h"
 #include "pskmod.h"
 #include "pskcoresdr.h"
+#include "libpsk.h"
 
+
+extern "C" {
 
  void* createPSKDet()
 {
@@ -110,4 +113,14 @@
  void SetMode(void* mod, int mode)
 {
 	((CPSKMod*)mod)->SetTXMode(mode);
+}
+
+
+void psk_d_free(PSK_DET det) {
+	freePSKDet(det);
+}
+int psk_d_get_freq(PSK_DET det) {
+	return GetRXFrequency(det);
+}
+
 }
