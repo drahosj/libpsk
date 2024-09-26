@@ -68,6 +68,7 @@ int main(int argc, char ** argv) {
     det = psk_d_create(8000, 1000, PSK_MODE_PSK31, PSK_SQL_THRESH_DEF,
                                PSK_SQL_SPEED_DEF, PSK_AFC_DEF);
     
+    puts("Entering PSK receive loop. No squelch; expect lots of garbage\n");
     for (unsigned int i = 0;;i++) {
         int16_t buf[SAMPLES];
         if (pa_simple_read(s, buf, sizeof(buf), &pa_err) < 0) {

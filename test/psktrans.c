@@ -66,15 +66,20 @@ int main(int argc, char ** argv) {
             goto fail;
     }
     
+    puts("PSK Transmit Console. Will automatically transmit line-by-line.");
+    puts("");
     
     char * line = NULL;
     size_t len = 0;
     for (;;) {
+        printf("[psk31] > ");
         getline(&line, &len, stdin);
+        printf("[transmitting...");
         if (send_line(s, line)) {
             ret = 1;
             goto fail;
         }
+        printf("done]\n");
     }
 
     
@@ -91,7 +96,10 @@ static int send_line(struct pa_simple * s, char * line) {
     int ret = 0;
     int pa_err;
     PSK_MOD mod = psk_m_create(8000, 1000, PSK_MODE_PSK31, 0);
+    psk_m_putchar(mod, '\n');
+    psk_m_putchar(mod, '\n');
     psk_m_puts(mod, line);
+    psk_m_putchar(mod, '\n');
     
     for (unsigned int i = 0;; i++) {
         int16_t buf[SAMPLES];

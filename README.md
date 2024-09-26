@@ -19,20 +19,19 @@ Moe Wheatley, AE4JY.
 - Sane defaults
 
 ## Quickstart
-`make test` and playback BPSK31 centered at 800 Hz into the default
-audio input device.
 
-Receive is supported. Build library, then cd to test and `make run`
+`make` in the root of the directory to build libpsk.
 
-This will receive 8s of audio and print characters. Center frequency is 800.
+Test programs are included (psktrans/pskrecv). To build these, run
+`make test` or `make` from the `test/` directory.
 
-To generate test output, transmit from fldigi in bpsk31 centered at 800 Hz
-and loopback (physical loopback works). `make run` test listens on the default
-audio input device.
+To execute the test programs, `cd` to `test/` and run `./pskrecv` to start
+monitoring and `./psktrans` to get a transmit console. PTT is not supported
+and center frequency is fixed at 1000 Hz.
 
-The detector still takes some time to stabilize, and stabilizes best on the
-idle output of FLDIGI. To test, first enable transmit in FLDIGI then `make
-run` the test. Once the test is running, enter text into the fldigi buffer.
+These are compatible with FLDIGI if using audio loopback. Audio loopback works
+virtually or physically (mic near speaker). FLDIGI mode BPSK31, place waterfall
+center marker at 1000 Hz.
 
 ## Documentation
 See test/test.c for an example. `make doc` to build doxygen documentation in

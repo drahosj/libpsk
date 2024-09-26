@@ -48,9 +48,10 @@ doc: inc/libpsk.h doxygen.conf
 clean:
 	-rm -f *.o
 	-rm -f $(PROGRAM)
+	cd test && make clean
 
 test: $(PROGRAM)
-	cd test && make run
+	cd test && make
 
 dist-clean: clean
 	-rm -rf doc
