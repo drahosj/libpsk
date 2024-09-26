@@ -62,7 +62,7 @@ static const double COEF[NUM_FILTERS] =
 
 CCalcIMD::CCalcIMD()
 {
-	for(INT i=0; i<NUM_FILTERS;i++)
+	for(int i=0; i<NUM_FILTERS;i++)
 	{
 		I1[i] = 0.0; I2[i] = 0.0;
 		Q1[i] = 0.0; Q2[i] = 0.0;
@@ -85,7 +85,7 @@ CCalcIMD::~CCalcIMD()
 //////////////////////////////////////////////////////////////////
 int CCalcIMD::CalcIMDEnergies(_complex samp)
 {
-INT i;
+int i;
 _complex temp;
 	for(i=0; i<NUM_FILTERS;i++)
 	{
@@ -113,11 +113,11 @@ _complex temp;
 //   carrier=F0(15.625), noise=F1(31.25), and 
 //   3rd order product=F2(46.875)
 //////////////////////////////////////////////////////////////////
-int CCalcIMD::CalcIMDValue( INT &imdval)
+int CCalcIMD::CalcIMDValue( int &imdval)
 {
 	m_Snr = 10.0*log10(m_Energy[0]/m_Energy[1]);
 	m_Imd = 10.0*log10(m_Energy[2]/m_Energy[0]);
-	imdval = (INT)m_Imd;
+	imdval = (int)m_Imd;
 	if( m_Snr > (-m_Imd+6) )
 		return TRUE;
 	else
@@ -126,7 +126,7 @@ int CCalcIMD::CalcIMDValue( INT &imdval)
 
 void CCalcIMD::ResetIMDEnergies()
 {
-	for(INT i=0; i<NUM_FILTERS;i++)
+	for(int i=0; i<NUM_FILTERS;i++)
 	{
 		I1[i] = I2[i] = Q1[i] = Q2[i] = 0.0;
 		m_NCount = 0;

@@ -406,7 +406,7 @@ const double ANGLE_TBL2[4] = { 3.0*PI2/4.0, PI2, PI2/4.0, PI2/2.0 };
 
 // bit sync half distance table
 // index any position 0 to 15 and it returns a position halfway from the index
-const INT HALF_TBL[16] = {
+const int HALF_TBL[16] = {
     7,	// 0
    8,	// 1
    9,	// 2

@@ -1,9 +1,9 @@
 #define int int
-#define INT int
+#define int int
 #define LONG long
 #define BYTE unsigned char
 #define WORD unsigned short
-#define PINT int *
+#define int * int *
 
 typedef struct COMPLEX {
   double x;

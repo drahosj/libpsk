@@ -125,7 +125,7 @@ CPSKMod::CPSKMod()
 	m_TxFreq = 1500.0;
 //	m_CWIdString = "Call Not Set";
 	m_pXmitQue = NULL;
-	m_pXmitQue = new INT[ TX_BUF_SIZE + 10];
+	m_pXmitQue = new int[ TX_BUF_SIZE + 10];
 //	InitializeCriticalSection(&m_CriticalSection);
 
 	PSKShapeTbl_Z = NULL;
@@ -234,7 +234,7 @@ void CPSKMod::CreateRampBuffers(int Fs)
 //Initialize the PSK/CW modulator with the sample frequncy Fs,
 // the carrier frequency freq, and the PSK mode.
 /////////////////////////////////////////////////////////////
-void CPSKMod::InitPSKMod(INT Fs, double MaxAmplitude)
+void CPSKMod::InitPSKMod(int Fs, double MaxAmplitude)
 {
 	
 	m_RMSConstant = MaxAmplitude;// sqrt(2.0);
@@ -254,7 +254,7 @@ void CPSKMod::InitPSKMod(INT Fs, double MaxAmplitude)
 	m_CWState = 0;
 	m_CWtimer = 0;
 	SetTXMode(m_PSKmode);
-	for(INT i=0; i<16; i++)
+	for(int i=0; i<16; i++)
 		m_IQPhaseArray[i] = 1;
 	m_VectLookup[SYM_NOCHANGE][0] = 0;
 	m_VectLookup[SYM_NOCHANGE][1] = 1000;
@@ -288,7 +288,7 @@ void CPSKMod::InitPSKMod(INT Fs, double MaxAmplitude)
 //////////////////////////////////////////////////////////////////////
 // Called to set the transmit mode
 //////////////////////////////////////////////////////////////////////
-void CPSKMod::SetTXMode(INT mode)
+void CPSKMod::SetTXMode(int mode)
 {
 	m_PSKmode = mode;
 	m_Ramp = 0;
@@ -333,9 +333,9 @@ void CPSKMod::SetTXMode(INT mode)
 			break;
 	}
 // Generate cosine ramp envelope lookup tables
-//	INT RampSize =  (((100*(INT)m_SampleFreq)/(INT)(m_SymbolRate*100))+0); //  number of envelope ramp steps per symbol
-	INT RampSize =  (INT)(m_SampleFreq/m_SymbolRate); //  number of envelope ramp steps per symbol
-	for( INT i=0; i<m_rampsize; i++)
+//	int RampSize =  (((100*(int)m_SampleFreq)/(int)(m_SymbolRate*100))+0); //  number of envelope ramp steps per symbol
+	int RampSize =  (int)(m_SampleFreq/m_SymbolRate); //  number of envelope ramp steps per symbol
+	for( int i=0; i<m_rampsize; i++)
 	{
 		PSKShapeTbl_Z[i] = 0.0;
 		PSKShapeTbl_P[i] = 1.0;
@@ -364,18 +364,18 @@ void CPSKMod::SetTXMode(INT mode)
 //////////////////////////////////////////////////////////////////////
 void CPSKMod::GetVectorData(long *VectData)
 {
-	for(INT i=0; i<16; i++)
+	for(int i=0; i<16; i++)
 		VectData[i] = m_IQPhaseArray[i];
 }
 
 /////////////////////////////////////////////////////////////
 // generates n samples of psk31 waveform in data array pData
 /////////////////////////////////////////////////////////////
-void CPSKMod::CalcPSK(double *pData, INT n, INT stride)
+void CPSKMod::CalcPSK(double *pData, int n, int stride)
 {
-INT symbol;
-INT i;
-INT v = 0;
+int symbol;
+int i;
+int v = 0;
 	//m_RMSConstant = TX_CONSTANT;
 	for( i=0; i<n; i+=2 )		//calculate n samples of tx data stream
 	{
@@ -425,11 +425,11 @@ INT v = 0;
 	}
 }
 /*
-void CPSKMod::CalcPSK(double* pData, INT n, INT stride)
+void CPSKMod::CalcPSK(double* pData, int n, int stride)
 {
-	INT symbol;
-	INT i;
-	INT v = 0;
+	int symbol;
+	int i;
+	int v = 0;
 	//m_RMSConstant = TX_CONSTANT;
 	for (i = 0; i < n; i++)		//calculate n samples of tx data stream
 	{
@@ -487,7 +487,7 @@ void CPSKMod::CalcPSK(double* pData, INT n, INT stride)
 BYTE CPSKMod::GetNextCWSymbol(void)
 {
 BYTE symb;
-INT ch;
+int ch;
 	symb = m_Lastsymb;		//use last symbol unless it needs to change
 	if( (m_TxShiftReg == 0 ) && (m_CWState == 0) )
 	{
@@ -495,7 +495,7 @@ INT ch;
 		if( ch >=0 )			//if is not a control code
 		{
 			ch &= 0xFF;		
-			ch = (INT)toupper( (BYTE)ch );	//make upper case
+			ch = (int)toupper( (BYTE)ch );	//make upper case
 			if( ch>=' ' && ch<='Z')
 				m_TxShiftReg = CW_TABLE[ ch-' '];	//look up pattern
 		}
@@ -565,7 +565,7 @@ INT ch;
 BYTE CPSKMod::GetNextBPSKSymbol(void)
 {
 BYTE symb;
-INT ch;
+int ch;
 	symb = m_Lastsymb;
 	if( m_TxShiftReg == 0 )
 	{
@@ -622,7 +622,7 @@ INT ch;
 BYTE CPSKMod::GetNextQPSKSymbol(void)
 {
 BYTE symb;
-INT ch;
+int ch;
 	symb = ConvolutionCodeTable[m_TxShiftReg&0x1F];	//get next convolution code
 	m_TxShiftReg = m_TxShiftReg<<1;
 	if( m_TxCodeWord == 0 )			//need to get next codeword
@@ -674,7 +674,7 @@ INT ch;
 BYTE CPSKMod::GetNextTuneSymbol(void)
 {
 BYTE symb;
-INT ch;
+int ch;
 	ch = GetChar();			//get next character to xmit
 	switch( ch )
 	{
@@ -691,9 +691,9 @@ INT ch;
 /////////////////////////////////////////////////////////////
 //get next character/symbol depending on TX state. 
 /////////////////////////////////////////////////////////////
-INT CPSKMod::GetChar()
+int CPSKMod::GetChar()
 {
-INT ch;
+int ch;
 // static test = '0';  //AA6YQ - not referenced
 	switch( m_TXState )
 	{
@@ -765,7 +765,7 @@ INT ch;
 			else
 			{
 				m_PSKmode = CW_MODE;
-				ch = (INT)m_CWIdString.GetAt(m_AmblePtr++);
+				ch = (int)m_CWIdString.GetAt(m_AmblePtr++);
 			}
 			break;*/
 		case TX_SENDING_STATE:		//if sending text from TX window
@@ -797,7 +797,7 @@ INT ch;
 ////////////////////////////////////////////////////////////////////////////
 //		TX Queueing routines
 /////////////////////////////////////////////////////////////////////////////
-void CPSKMod::PutTxQue(INT txchar, int cntrl)
+void CPSKMod::PutTxQue(int txchar, int cntrl)
 {
 //	EnterCriticalSection(&m_CriticalSection);
 	if( cntrl )	//is a tx control code
@@ -843,12 +843,12 @@ void CPSKMod::PutTxQue(INT txchar, int cntrl)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-INT CPSKMod::GetTxChar()
+int CPSKMod::GetTxChar()
 {
 	//get next character from app callback
 
 
-INT ch;
+int ch;
 //	EnterCriticalSection(&m_CriticalSection);
 	if (getNextChar != nullptr)
 	{
@@ -899,10 +899,10 @@ void CPSKMod::ClrQue()
 }
 
 
-INT CPSKMod::GetTXCharsRemaining()
+int CPSKMod::GetTXCharsRemaining()
 {
 //	EnterCriticalSection(&m_CriticalSection);
-	INT num = m_pHead - m_pTail;
+	int num = m_pHead - m_pTail;
 //	LeaveCriticalSection(&m_CriticalSection);
 	if( num < 0 )
 		num = num + TX_BUF_SIZE;

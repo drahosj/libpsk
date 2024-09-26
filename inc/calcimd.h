@@ -36,7 +36,7 @@ class CCalcIMD
 public:
 	void ResetIMDEnergies();
 	int CalcIMDEnergies(_complex samp);
-	int CalcIMDValue( INT &imdval);
+	int CalcIMDValue( int &imdval);
 	CCalcIMD();
 	virtual ~CCalcIMD();
 
@@ -46,7 +46,7 @@ private:
 	double Q1[NUM_FILTERS];
 	double Q2[NUM_FILTERS];
 	double m_Energy[NUM_FILTERS];
-	INT m_NCount;
+	int m_NCount;
 	double m_Snr;
 	double m_Imd;
 	

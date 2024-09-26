@@ -66,7 +66,7 @@ static char THIS_FILE[]=__FILE__;
 extern double TestData[];
 extern double DebugFP1;
 extern double DebugFP2;
-extern INT DebugINT;
+extern int Debugint;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -102,10 +102,10 @@ CPSKDet::~CPSKDet()
 /////////////////////////////////////////////////////////////////
 //       Initialize PskDet buffers and pointers
 /////////////////////////////////////////////////////////////////
-void CPSKDet::Init( INT Fs )
+void CPSKDet::Init( int Fs )
 {
 WORD wTemp;
-INT i;
+int i;
 	m_Fs = Fs;
 // init circular delay lines.(data stays put and the pointers move)
 	for( WORD j=0; j<2048; j++)		//init inverse varicode lookup decoder table
@@ -160,7 +160,7 @@ INT i;
 //////////////////////////////////////////////////////////////////////
 // Called to adjust the sample clock
 //////////////////////////////////////////////////////////////////////
-void CPSKDet::SetSampleClkAdj(INT ppm)
+void CPSKDet::SetSampleClkAdj(int ppm)
 {
 	m_SampleClkAdj = (m_Fs*ppm)/1000000;
 	m_SampleFreq = (double)(m_Fs + m_SampleClkAdj);		//adj sample rate
@@ -173,7 +173,7 @@ void CPSKDet::SetSampleClkAdj(INT ppm)
 //////////////////////////////////////////////////////////////////////
 void CPSKDet::GetVectorData(long *VectData)
 {
-	for(INT i=0; i<16; i++)
+	for(int i=0; i<16; i++)
 		VectData[i] = m_IQPhaseArray[i];
 }
 
@@ -182,14 +182,14 @@ void CPSKDet::GetVectorData(long *VectData)
 //////////////////////////////////////////////////////////////////////
 void CPSKDet::GetSyncData(long *SyncData)
 {
-	for(INT i=0; i<16; i++)
+	for(int i=0; i<16; i++)
 		SyncData[i] = m_SyncArray[i];
 }
 
 //////////////////////////////////////////////////////////////////////
 // Called to change the Rx frequency
 //////////////////////////////////////////////////////////////////////
-void CPSKDet::SetRXFrequency(INT freq)
+void CPSKDet::SetRXFrequency(int freq)
 {
 	if( freq != m_RxFrequency)
 	{
@@ -214,7 +214,7 @@ void CPSKDet::SetRXFrequency(INT freq)
 //////////////////////////////////////////////////////////////////////
 // Called to change the AFC limit
 //////////////////////////////////////////////////////////////////////
-void CPSKDet::SetAFCLimit(INT limit)
+void CPSKDet::SetAFCLimit(int limit)
 {
 	if(limit==0)
 		m_AFCmode = AFC_OFF;
@@ -245,7 +245,7 @@ void CPSKDet::SetAFCLimit(INT limit)
 //////////////////////////////////////////////////////////////////////
 void CPSKDet::ResetDetector()
 {
-	for(INT i=0; i<DEC4_LPFIR_LENGTH; i++)
+	for(int i=0; i<DEC4_LPFIR_LENGTH; i++)
 	{
 		m_pQue1[i].x = 0.0;	// fill delay buffer with zero
 		m_pQue1[i].y = 0.0;
@@ -284,16 +284,16 @@ void CPSKDet::ResetDetector()
 //////////////////////////////////////////////////////////////////////
 // Main routine called to process the next block of data 'pIn'.
 //////////////////////////////////////////////////////////////////////
-INT CPSKDet::ProcPSKDet( double* pIn,INT nSamples,INT stride,char* result,INT resultLen)
+int CPSKDet::ProcPSKDet( double* pIn,int nSamples,int stride,char* result,int resultLen)
 {
-	INT ret = 0;
-	INT i,j;
+	int ret = 0;
+	int i,j;
 	const double* Kptr;
 	_complex acc;
 	_complex* Firptr;
 	double vcophz = m_VcoPhz;
 
-	INT mod16_8 = 16;
+	int mod16_8 = 16;
 
 	if(m_PSK63Mode)
 		mod16_8 = 8;
@@ -398,8 +398,8 @@ INT CPSKDet::ProcPSKDet( double* pIn,INT nSamples,INT stride,char* result,INT re
 	}
 	m_SampCnt = m_SampCnt%16;
 	m_VcoPhz = vcophz;
-	m_RxFrequency = (INT)(0.5+((m_NCOphzinc + m_FreqError)*m_SampleFreq/PI2 ) );
-//	m_RxFrequency = (INT)(0.5+((m_NCOphzinc)*m_SampleFreq/PI2 ) );
+	m_RxFrequency = (int)(0.5+((m_NCOphzinc + m_FreqError)*m_SampleFreq/PI2 ) );
+//	m_RxFrequency = (int)(0.5+((m_NCOphzinc)*m_SampleFreq/PI2 ) );
 	return ret;
 }
 
@@ -570,7 +570,7 @@ int CPSKDet::SymbSync(_complex sample)
 int Trigger=FALSE;
 double max;
 double energy;
-INT BitPos = m_BitPos;
+int BitPos = m_BitPos;
 	if(BitPos<16)
 	{
 		energy = (sample.x*sample.x) + (sample.y*sample.y);
@@ -580,12 +580,12 @@ INT BitPos = m_BitPos;
 		if( BitPos == m_PkPos )	// see if at middle of symbol
 		{
 			Trigger = TRUE;
-			m_SyncArray[m_PkPos] = (INT)(900.0*m_SyncAve[m_PkPos]);
+			m_SyncArray[m_PkPos] = (int)(900.0*m_SyncAve[m_PkPos]);
 		}
 		else
 		{
 			Trigger = FALSE;
-			m_SyncArray[BitPos] = (INT)(750.0*m_SyncAve[BitPos]);
+			m_SyncArray[BitPos] = (int)(750.0*m_SyncAve[BitPos]);
 		}
 		if( BitPos == HALF_TBL[m_NewPkPos] )	//don't change pk pos until
 			m_PkPos = m_NewPkPos;			// halfway into next bit.
@@ -600,7 +600,7 @@ INT BitPos = m_BitPos;
 			Trigger = TRUE;
 		BitPos = 0;
 		max = -1e10;
-		for( INT i=0; i<16; i++)		//find maximum energy pk
+		for( int i=0; i<16; i++)		//find maximum energy pk
 		{
 			energy = m_SyncAve[i];
 			if( energy > max )
@@ -813,14 +813,14 @@ double SqTimeK;
 		m_IMDValid = TRUE;
 	else
 		m_IMDValid = FALSE;
-//DebugINT = m_Pcnt+m_Ncnt;
+//Debugint = m_Pcnt+m_Ncnt;
 
 	if( m_AGCave > 10.0 )
 	{
 		if( m_RxMode ) //if QPSK
-			m_SQLevel = 100 - (INT)m_DevAve;
+			m_SQLevel = 100 - (int)m_DevAve;
 		else
-			m_SQLevel = 100 - (INT)m_DevAve;
+			m_SQLevel = 100 - (int)m_DevAve;
 		if (m_SQLevel >= m_SQThresh)
 			m_SQOpen = TRUE;
 		else
@@ -869,7 +869,7 @@ _complex* Firptr;
 	Firptr = m_pQue3;
 	Kptr1 = FreqFirCoef + BITFIR_LENGTH - m_Fir3State;	//frequency error filter
 	Kptr2 = BitFirCoef + BITFIR_LENGTH - m_Fir3State;	//bit data filter
-	for(INT j=0; j<	BITFIR_LENGTH;j++)	//do the MACs
+	for(int j=0; j<	BITFIR_LENGTH;j++)	//do the MACs
 	{
 		acc1.x += ( (Firptr->x)*(*Kptr1) );
 		acc1.y += ( (Firptr->y)*(*Kptr1++) );
@@ -893,9 +893,9 @@ int CPSKDet::ViterbiDecode( double newangle)
 {
 double pathdist[32];
 double min;
-INT bitestimates[32];
-INT ones;
-INT i;
+int bitestimates[32];
+int ones;
+int i;
 const double* pAngleTbl;
 	min = 1.0e100;		// make sure can find a minimum value
 	if( newangle >= PI2/2 )		//deal with ambiguity at +/- 2PI

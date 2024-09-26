@@ -42,7 +42,7 @@ struct PSKStruct
 {
 	double* iptr;
 	double* qptr;
-	INT	next;
+	int	next;
 };
 
 typedef PSKStruct PSKSTATE;
@@ -55,24 +55,24 @@ public:
 	CPSKMod();
 	virtual ~CPSKMod();
 // PSK31 and CW modulator
-	void InitPSKMod(INT Fs, double MaxAmplitude);
-	void CalcPSK( double* pData , INT n, INT stride);
-	void PutTxQue(INT txchar, int cntrl );
+	void InitPSKMod(int Fs, double MaxAmplitude);
+	void CalcPSK( double* pData , int n, int stride);
+	void PutTxQue(int txchar, int cntrl );
 	void ClrQue();
 	void SetCWIDSpeed(LONG speed);
-	INT GetTXCharsRemaining();
+	int GetTXCharsRemaining();
 //	void SetTXCWID( PCHAR lpszIDstrg){m_CWIdString = lpszIDstrg;}
-	void SetTXFreq(INT freq)
+	void SetTXFreq(int freq)
 	{
 		m_TxFreq = (double)freq;
 		m_PSKPhaseInc = m_2PI * m_TxFreq / m_SampleFreq;
 	}
-	void SetTXMode(INT mode);
+	void SetTXMode(int mode);
 	void SetAutoShutoff(int val){m_NeedShutoff = val;}
 	void SetAutoCWID(int val){ m_NeedCWid = val;}
-	INT GetTXState(){return m_TXState;}
-	void SetSampleClkAdj(INT ppm){m_ClkError = 1.0;};
-//	void SetSampleClkAdj(INT ppm){m_ClkError = 1.0 - (double)ppm/1000000.0;};
+	int GetTXState(){return m_TXState;}
+	void SetSampleClkAdj(int ppm){m_ClkError = 1.0;};
+//	void SetSampleClkAdj(int ppm){m_ClkError = 1.0 - (double)ppm/1000000.0;};
 	void GetVectorData(long* VectData);
 
 	getNextCharCallback getNextChar = nullptr;
@@ -91,24 +91,24 @@ private:
 	int m_TempNeedCWid;
 	int m_TempNeedShutoff;
 	LONG m_IQPhaseArray[20];
-	INT m_Fs;
-	INT m_CWIDSpeed;
-	INT m_SavedMode;
-	INT m_Channel;
-	INT m_VectLookup[6][2];
-	INT m_pTail;
-	INT m_pHead;
-	INT GetTxChar();
-	INT m_AmblePtr;
-	INT m_Preamble[33];
-	INT m_Postamble[33];
-	INT m_TXState;
-	INT m_PSKmode;
-	INT m_CWState;
-	INT m_CWtimer;
-	INT m_Ramp;
-	INT m_CWSetSpeed;
-	PINT m_pXmitQue;
+	int m_Fs;
+	int m_CWIDSpeed;
+	int m_SavedMode;
+	int m_Channel;
+	int m_VectLookup[6][2];
+	int m_pTail;
+	int m_pHead;
+	int GetTxChar();
+	int m_AmblePtr;
+	int m_Preamble[33];
+	int m_Postamble[33];
+	int m_TXState;
+	int m_PSKmode;
+	int m_CWState;
+	int m_CWtimer;
+	int m_Ramp;
+	int m_CWSetSpeed;
+	int * m_pXmitQue;
 //	CString m_CWIdString;
 // PSK31 and CW generator variables
 	int m_AddEndingZero;
@@ -130,7 +130,7 @@ private:
 	double* m_pPSKtxI;
 	double* m_pPSKtxQ;
 
-	INT m_rampsize;
+	int m_rampsize;
 	double* PSKShapeTbl_Z;
 	double* PSKShapeTbl_P;
 	double* PSKShapeTbl_M;
@@ -147,7 +147,7 @@ private:
 
 
 // PSK31 and CW modulator private functions
-	INT GetChar( );
+	int GetChar( );
 	BYTE GetNextBPSKSymbol(void);
 	BYTE GetNextQPSKSymbol(void);
 	BYTE GetNextCWSymbol(void);

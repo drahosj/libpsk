@@ -55,14 +55,14 @@ public:
 	CPSKDet();
 	virtual ~CPSKDet();
 
-	void Init(INT Fs );
-	INT ProcPSKDet(double* pIn, INT nSamples, INT stride, char* result, INT resultLen);
+	void Init(int Fs );
+	int ProcPSKDet(double* pIn, int nSamples, int stride, char* result, int resultLen);
 	void GetVectorData(long* VectData);
 	void GetSyncData(long* SyncData);
 	void ResetDetector();
-	void SetRXFrequency(INT freq);
+	void SetRXFrequency(int freq);
 
-	void SetRXPSKMode(INT mode)
+	void SetRXPSKMode(int mode)
 	{
 		//char buf[200];
 		//sprintf( buf, " Mode=%32u ",mode);
@@ -80,17 +80,17 @@ public:
 		m_RxMode = mode & (~PSK63_MODE) & (~PSK125_MODE);
 	};
 
-	void SetAFCLimit(INT limit);
-	void SetSampleClkAdj(INT ppm);
-	INT GetRXFrequency(){return m_RxFrequency;};
-	INT GetSignalLevel()
+	void SetAFCLimit(int limit);
+	void SetSampleClkAdj(int ppm);
+	int GetRXFrequency(){return m_RxFrequency;};
+	int GetSignalLevel()
 	{ 
 		if(m_SQLevel>0)
 			return m_SQLevel;
 		else
 			return 0;
 	};
-	void SetSquelchThresh(INT thresh,INT speed)
+	void SetSquelchThresh(int thresh,int speed)
 	{
 		m_SQThresh = thresh;
 		if( speed == SQMODEFAST )
@@ -129,31 +129,31 @@ private:
 	WORD m_BitAcc;
 	LONG m_IQPhaseArray[20];
 	LONG m_SyncArray[20];
-	INT m_AFCTimer;
-	INT m_AFCmode;
-	INT m_RxMode;
-	INT m_SampleClkAdj;
-	INT m_AFCcounter;
-	INT m_IMDValue;
-	INT m_IQPhzIndex;
-	INT m_SquelchSpeed;
-//	INT m_RxChannel;
-	INT m_SQLevel;
-	INT m_SQThresh;
-	INT m_ClkErrTimer;
-	INT m_ClkErrCounter;
-	INT m_ClkError;
-	INT m_LastPkPos;
-	INT m_OnCount;
-	INT m_OffCount;
-	INT m_TrigInhib;
-	INT m_SampCnt;
-//	INT m_BlockSize;
-	INT m_RxFrequency;
-	INT m_Fs;
-	INT m_Fir1State;
-	INT m_Fir2State;
-	INT m_Fir3State;
+	int m_AFCTimer;
+	int m_AFCmode;
+	int m_RxMode;
+	int m_SampleClkAdj;
+	int m_AFCcounter;
+	int m_IMDValue;
+	int m_IQPhzIndex;
+	int m_SquelchSpeed;
+//	int m_RxChannel;
+	int m_SQLevel;
+	int m_SQThresh;
+	int m_ClkErrTimer;
+	int m_ClkErrCounter;
+	int m_ClkError;
+	int m_LastPkPos;
+	int m_OnCount;
+	int m_OffCount;
+	int m_TrigInhib;
+	int m_SampCnt;
+//	int m_BlockSize;
+	int m_RxFrequency;
+	int m_Fs;
+	int m_Fir1State;
+	int m_Fir2State;
+	int m_Fir3State;
 	double m_FreqError;
 	double m_QPSKprob[4];
 	double m_DevAve;
@@ -179,11 +179,11 @@ private:
 	struct SurvivorStates m_SurvivorStates[16]; /* Survivor path trellis */
 
 // Local variables for various functions that need to be saved between calls
-	INT	m_PkPos;
-	INT	m_NewPkPos;
-	INT m_BitPos;
-	INT m_Pcnt;
-	INT m_Ncnt;
+	int	m_PkPos;
+	int	m_NewPkPos;
+	int m_BitPos;
+	int m_Pcnt;
+	int m_Ncnt;
 	double m_AGCave;
 	double m_FperrAve;
 	double m_FferrAve;
