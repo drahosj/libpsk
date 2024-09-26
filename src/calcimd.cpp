@@ -23,7 +23,6 @@
 // http://www.gnu.org/copyleft/lesser.html
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
 #include "math.h"
 #include "calcimd.h"
 
@@ -103,10 +102,10 @@ _complex temp;
 							Q1[i]*Q1[i] + Q2[i]*Q2[i] - Q1[i]*Q2[i]*COEF[i];
 			I1[i] = I2[i] = Q1[i] = Q2[i] = 0.0;
 		}
-		return TRUE;
+		return 1;
 	}
 	else
-		return FALSE;	
+		return 0;	
 }
 //////////////////////////////////////////////////////////////////
 //  This routine calculates the IMD using the frequency bands of
@@ -119,9 +118,9 @@ int CCalcIMD::CalcIMDValue( int &imdval)
 	m_Imd = 10.0*log10(m_Energy[2]/m_Energy[0]);
 	imdval = (int)m_Imd;
 	if( m_Snr > (-m_Imd+6) )
-		return TRUE;
+		return 1;
 	else
-		return FALSE;
+		return 0;
 }
 
 void CCalcIMD::ResetIMDEnergies()

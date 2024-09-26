@@ -46,7 +46,7 @@
 struct SurvivorStates
 {
 	double Pathdistance;	// sum of all metrics for a given survivor path
-	LONG BitEstimates;		// the bit pattern estimate associated with given survivor path
+	long BitEstimates;		// the bit pattern estimate associated with given survivor path
 };
 
 class CPSKDet  
@@ -68,14 +68,14 @@ public:
 		//sprintf( buf, " Mode=%32u ",mode);
 		//AfxMessageBox( buf );
 
-		m_PSK63Mode = FALSE;		//AA6YQ 1.21
-		m_PSK125Mode = FALSE;
+		m_PSK63Mode = 0;		//AA6YQ 1.21
+		m_PSK125Mode = 0;
 
 		if(mode&PSK63_MODE) 			
-			m_PSK63Mode = TRUE;
+			m_PSK63Mode = 1;
 
 		if(mode&PSK125_MODE)  
-			m_PSK125Mode = TRUE;
+			m_PSK125Mode = 1;
 		
 		m_RxMode = mode & (~PSK63_MODE) & (~PSK125_MODE);
 	};
@@ -112,7 +112,7 @@ private:
 	void CalcQuality(double angle );
 	int ViterbiDecode( double newangle);
 	int SymbSync(_complex sample);
-	double CalcDistance( _complex newsymb, BYTE symb);
+	double CalcDistance( _complex newsymb, unsigned char symb);
 	void CalcFreqError( _complex IQ );
 	void CalcFFreqError( _complex IQ );
 // other classes
@@ -125,10 +125,10 @@ private:
 	int m_LastBitZero;
 	int m_PSK63Mode;
 	int m_PSK125Mode;				//AA6YQ 1.21
-	BYTE m_VaricodeDecTbl[2048];
-	WORD m_BitAcc;
-	LONG m_IQPhaseArray[20];
-	LONG m_SyncArray[20];
+	unsigned char m_VaricodeDecTbl[2048];
+	unsigned short m_BitAcc;
+	long m_IQPhaseArray[20];
+	long m_SyncArray[20];
 	int m_AFCTimer;
 	int m_AFCmode;
 	int m_RxMode;

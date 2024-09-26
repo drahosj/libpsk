@@ -59,7 +59,7 @@ public:
 	void CalcPSK( double* pData , int n, int stride);
 	void PutTxQue(int txchar, int cntrl );
 	void ClrQue();
-	void SetCWIDSpeed(LONG speed);
+	void SetCWIDSpeed(long speed);
 	int GetTXCharsRemaining();
 //	void SetTXCWID( PCHAR lpszIDstrg){m_CWIdString = lpszIDstrg;}
 	void SetTXFreq(int freq)
@@ -90,7 +90,7 @@ private:
 	int m_TempNoSquelchTail;
 	int m_TempNeedCWid;
 	int m_TempNeedShutoff;
-	LONG m_IQPhaseArray[20];
+	long m_IQPhaseArray[20];
 	int m_Fs;
 	int m_CWIDSpeed;
 	int m_SavedMode;
@@ -112,10 +112,10 @@ private:
 //	CString m_CWIdString;
 // PSK31 and CW generator variables
 	int m_AddEndingZero;
-	BYTE m_PresentPhase;
-	BYTE m_Lastsymb;
-	WORD m_TxShiftReg;
-	WORD m_TxCodeWord;
+	unsigned char m_PresentPhase;
+	unsigned char m_Lastsymb;
+	unsigned short m_TxShiftReg;
+	unsigned short m_TxCodeWord;
 	double m_SymbolRate;
 	double m_TxFreq;
 	double m_SampleFreq;
@@ -148,10 +148,10 @@ private:
 
 // PSK31 and CW modulator private functions
 	int GetChar( );
-	BYTE GetNextBPSKSymbol(void);
-	BYTE GetNextQPSKSymbol(void);
-	BYTE GetNextCWSymbol(void);
-	BYTE GetNextTuneSymbol(void);
+	unsigned char GetNextBPSKSymbol(void);
+	unsigned char GetNextQPSKSymbol(void);
+	unsigned char GetNextCWSymbol(void);
+	unsigned char GetNextTuneSymbol(void);
 
 	void DeleteRampBuffers(void);
 	void CreateRampBuffers(int Fs);

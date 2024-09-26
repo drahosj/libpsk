@@ -24,46 +24,35 @@
 // from a DLL simpler. All files within this DLL are compiled with the PSKCORE_EXPORTS
 // symbol defined on the command line. This symbol should not be defined on any project
 // that uses this DLL. This way any other project whose source files include this file see 
-// PSKCORE_API functions as being imported from a DLL, whereas this DLL sees symbols
+//  functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
-//#define PSKCORE_EXPORTS
-#ifdef PSKCORE_EXPORTS
-#ifdef linux
-#define PSKCORE_API extern
-#else
-#define PSKCORE_API __declspec(dllexport)
-#endif
-#else
-#define PSKCORE_API 
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 	typedef int(* getNextCharCallback)(void* context);
 
-	PSKCORE_API void* createPSKDet();
-	PSKCORE_API void* initPSKDet(int fs);
-	PSKCORE_API void setupPSKDet(void* det, int fs);
+	 void* createPSKDet();
+	 void* initPSKDet(int fs);
+	 void setupPSKDet(void* det, int fs);
 
-	PSKCORE_API int runPSKDet(void* det, double * inp, int len, int stride, char* result, int resultLen);
-	PSKCORE_API void freePSKDet(void* det);
-	PSKCORE_API void SetSquelchThresh(void* det, int limit);
-	PSKCORE_API void SetRXFrequency(void* det, int frequency);
-	PSKCORE_API int GetRXFrequency(void* det);
-	PSKCORE_API int GetSignalLevel(void* det);
-	PSKCORE_API void SetAFCLimit(void* det, int limit);
-	PSKCORE_API void ResetDetector(void* det);
-	PSKCORE_API void SetRXPSKMode(void* det,int mode);
+	 int runPSKDet(void* det, double * inp, int len, int stride, char* result, int resultLen);
+	 void freePSKDet(void* det);
+	 void SetSquelchThresh(void* det, int limit);
+	 void SetRXFrequency(void* det, int frequency);
+	 int GetRXFrequency(void* det);
+	 int GetSignalLevel(void* det);
+	 void SetAFCLimit(void* det, int limit);
+	 void ResetDetector(void* det);
+	 void SetRXPSKMode(void* det,int mode);
 
-	PSKCORE_API void* createPSKMod(int fs, double maxAmplitude);
-	PSKCORE_API void freePSKMod(void* mod);
-	PSKCORE_API void SetTXFrequency(void* mod, int frequency);
-	PSKCORE_API void CalcPSK(void* mod, double* pData, int n, int stride);
-	PSKCORE_API void PutTxQue(void* mod, int ch);
-	PSKCORE_API void SetCallback(void* mod, void* context, getNextCharCallback callback);
-	PSKCORE_API void SetMode(void* mod, int mode);
+	 void* createPSKMod(int fs, double maxAmplitude);
+	 void freePSKMod(void* mod);
+	 void SetTXFrequency(void* mod, int frequency);
+	 void CalcPSK(void* mod, double* pData, int n, int stride);
+	 void PutTxQue(void* mod, int ch);
+	 void SetCallback(void* mod, void* context, getNextCharCallback callback);
+	 void SetMode(void* mod, int mode);
 
 
 #ifdef __cplusplus

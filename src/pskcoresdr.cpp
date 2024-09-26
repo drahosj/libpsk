@@ -22,93 +22,92 @@
 // PSKCoreSDR.cpp : Defines the exported functions for the DLL application.
 //
 
-#include "stdafx.h"
 #include "pskdet.h"
 #include "pskmod.h"
 #include "pskcoresdr.h"
 
 
-PSKCORE_API void* createPSKDet()
+ void* createPSKDet()
 {
 	CPSKDet* d = new CPSKDet();
 	return d;
 }
 // depreciated
-PSKCORE_API void* initPSKDet(int fs)
+ void* initPSKDet(int fs)
 {
 	CPSKDet* d = new CPSKDet();
 	d->Init(fs);
 	return d;
 }
-PSKCORE_API void setupPSKDet(void* det, int fs)
+ void setupPSKDet(void* det, int fs)
 {
 	((CPSKDet*)det)->Init(fs);
 }
-PSKCORE_API int runPSKDet(void* det, double * inp, int len, int stride, char* result, int resultLen)
+ int runPSKDet(void* det, double * inp, int len, int stride, char* result, int resultLen)
 {
 	return ((CPSKDet*)det)->ProcPSKDet(inp, len, stride, result, resultLen);
 }
-PSKCORE_API void freePSKDet(void* det)
+ void freePSKDet(void* det)
 {
 	delete ((CPSKDet*)det);
 }
-PSKCORE_API void SetSquelchThresh(void* det, int limit)
+ void SetSquelchThresh(void* det, int limit)
 {
 	((CPSKDet*)det)->SetSquelchThresh(limit, 75);
 }
-PSKCORE_API void SetRXFrequency(void* det, int frequency)
+ void SetRXFrequency(void* det, int frequency)
 {
 	((CPSKDet*)det)->SetRXFrequency(frequency);
 }
-PSKCORE_API int GetRXFrequency(void* det)
+ int GetRXFrequency(void* det)
 {
 	return ((CPSKDet*)det)->GetRXFrequency();
 }
-PSKCORE_API int GetSignalLevel(void* det)
+ int GetSignalLevel(void* det)
 {
 	return ((CPSKDet*)det)->GetSignalLevel();
 }
-PSKCORE_API void SetAFCLimit(void* det, int limit)
+ void SetAFCLimit(void* det, int limit)
 {
 	((CPSKDet*)det)->SetAFCLimit(limit);
 }
-PSKCORE_API void ResetDetector(void* det)
+ void ResetDetector(void* det)
 {
 	((CPSKDet*)det)->ResetDetector();
 }
-PSKCORE_API void SetRXPSKMode(void* det, int mode)
+ void SetRXPSKMode(void* det, int mode)
 {
 	((CPSKDet*)det)->SetRXPSKMode(mode);
 }
 
-PSKCORE_API void* createPSKMod(int fs, double maxAmplitude)
+ void* createPSKMod(int fs, double maxAmplitude)
 {
 	CPSKMod* m = new CPSKMod();
 	m->InitPSKMod(fs,maxAmplitude);
 	return m;
 }
-PSKCORE_API void freePSKMod(void* mod)
+ void freePSKMod(void* mod)
 {
 	delete ((CPSKMod*)mod);
 }
-PSKCORE_API void SetTXFrequency(void* mod, int frequency)
+ void SetTXFrequency(void* mod, int frequency)
 {
 	((CPSKMod*)mod)->SetTXFreq(frequency);
 }
-PSKCORE_API void CalcPSK(void* mod, double* pData, int n, int stride)
+ void CalcPSK(void* mod, double* pData, int n, int stride)
 {
 	((CPSKMod*)mod)->CalcPSK(pData, n, stride);
 }
-PSKCORE_API void PutTxQue(void* mod, int ch)
+ void PutTxQue(void* mod, int ch)
 {
 	((CPSKMod*)mod)->PutTxQue(ch, false);
 }
-PSKCORE_API void SetCallback(void* mod, void* context, getNextCharCallback callback)
+ void SetCallback(void* mod, void* context, getNextCharCallback callback)
 {
 	((CPSKMod*)mod)->callbackContext = context;
 	((CPSKMod*)mod)->getNextChar = callback;
 }
-PSKCORE_API void SetMode(void* mod, int mode)
+ void SetMode(void* mod, int mode)
 {
 	((CPSKMod*)mod)->SetTXMode(mode);
 }

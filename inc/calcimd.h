@@ -22,6 +22,12 @@
 // http://www.gnu.org/copyleft/lesser.html
 //////////////////////////////////////////////////////////////////////
 
+/* Temporarily moved here for now */
+typedef struct COMPLEX {
+  double x;
+  double y;
+} _complex;
+
 #if !defined(AFX_CALCIMD_H__997190E0_030A_11D4_B4E7_D0AA4EC10108__INCLUDED_)
 #define AFX_CALCIMD_H__997190E0_030A_11D4_B4E7_D0AA4EC10108__INCLUDED_
 

@@ -24,7 +24,6 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-#include "stdafx.h"
 #include <math.h>
 #include <ctype.h>
 #include <stddef.h>
@@ -112,12 +111,12 @@ CPSKMod::CPSKMod()
 	m_Fs = 8000;
 	m_ClkError = 1.0;
 	m_AmblePtr = 0;
-	m_NeedCWid = FALSE;
-	m_NeedShutoff = FALSE;
-	m_NoSquelchTail = FALSE;
-	m_TempNeedCWid = FALSE;
-	m_TempNeedShutoff = FALSE;
-	m_TempNoSquelchTail = FALSE;
+	m_NeedCWid = 0;
+	m_NeedShutoff = 0;
+	m_NoSquelchTail = 0;
+	m_TempNeedCWid = 0;
+	m_TempNeedShutoff = 0;
+	m_TempNoSquelchTail = 0;
 	m_PSKmode = BPSK_MODE;
 	m_CWSetSpeed = CW_SPEED;
 	m_pTail = 0;
@@ -250,7 +249,7 @@ void CPSKMod::InitPSKMod(int Fs, double MaxAmplitude)
 	m_PSKTime = 0.0;
 	m_t = 0.0;
 	m_Lastsymb = SYM_OFF;
-	m_AddEndingZero = TRUE;
+	m_AddEndingZero = 1;
 	m_CWState = 0;
 	m_CWtimer = 0;
 	SetTXMode(m_PSKmode);
@@ -322,7 +321,7 @@ void CPSKMod::SetTXMode(int mode)
 			break;
 		case TUNE_MODE_WID:
 			m_TXState = TX_TUNE_STATE;
-			m_NeedCWid = TRUE;
+			m_NeedCWid = 1;
 			break;
 		case CW_MODE:
 			m_TXState = TX_PREAMBLE_STATE;
@@ -484,9 +483,9 @@ void CPSKMod::CalcPSK(double* pData, int n, int stride)
 // next character from the character Queue if no more symbols
 // are left to send.
 /////////////////////////////////////////////////////////////
-BYTE CPSKMod::GetNextCWSymbol(void)
+unsigned char CPSKMod::GetNextCWSymbol(void)
 {
-BYTE symb;
+unsigned char symb;
 int ch;
 	symb = m_Lastsymb;		//use last symbol unless it needs to change
 	if( (m_TxShiftReg == 0 ) && (m_CWState == 0) )
@@ -495,7 +494,7 @@ int ch;
 		if( ch >=0 )			//if is not a control code
 		{
 			ch &= 0xFF;		
-			ch = (int)toupper( (BYTE)ch );	//make upper case
+			ch = (int)toupper( (unsigned char)ch );	//make upper case
 			if( ch>=' ' && ch<='Z')
 				m_TxShiftReg = CW_TABLE[ ch-' '];	//look up pattern
 		}
@@ -562,9 +561,9 @@ int ch;
 // next character from the character Queue if no more symbols
 // are left to send.
 /////////////////////////////////////////////////////////////
-BYTE CPSKMod::GetNextBPSKSymbol(void)
+unsigned char CPSKMod::GetNextBPSKSymbol(void)
 {
-BYTE symb;
+unsigned char symb;
 int ch;
 	symb = m_Lastsymb;
 	if( m_TxShiftReg == 0 )
@@ -572,7 +571,7 @@ int ch;
 		if( m_AddEndingZero )		// if is end of code
 		{
 			symb = SYM_P180;		// end with a zero
-			m_AddEndingZero = FALSE;
+			m_AddEndingZero = 0;
 		}
 		else
 		{
@@ -607,7 +606,7 @@ int ch;
 			symb = SYM_P180;
 		m_TxShiftReg = m_TxShiftReg<<1;	//point to next bit
 		if( m_TxShiftReg == 0 )			// if at end of codeword
-			m_AddEndingZero = TRUE;		// need to send a zero nextime
+			m_AddEndingZero = 1;		// need to send a zero nextime
 	}
 	m_Lastsymb = symb;
 	return symb;
@@ -619,9 +618,9 @@ int ch;
 // next character from the character Queue if no more symbols
 // are left to send.
 /////////////////////////////////////////////////////////////
-BYTE CPSKMod::GetNextQPSKSymbol(void)
+unsigned char CPSKMod::GetNextQPSKSymbol(void)
 {
-BYTE symb;
+unsigned char symb;
 int ch;
 	symb = ConvolutionCodeTable[m_TxShiftReg&0x1F];	//get next convolution code
 	m_TxShiftReg = m_TxShiftReg<<1;
@@ -629,7 +628,7 @@ int ch;
 	{
 		if( m_AddEndingZero )		//if need to add a zero
 		{
-			m_AddEndingZero = FALSE;	//end with a zero
+			m_AddEndingZero = 0;	//end with a zero
 		}
 		else
 		{
@@ -663,7 +662,7 @@ int ch;
 		}
 		m_TxCodeWord = m_TxCodeWord<<1;
 		if(m_TxCodeWord == 0)
-			m_AddEndingZero = TRUE;	//need to add another zero
+			m_AddEndingZero = 1;	//need to add another zero
 	}
 	return symb;
 }
@@ -671,9 +670,9 @@ int ch;
 /////////////////////////////////////////////////////////////
 // called every symbol time to get next Tune symbol
 /////////////////////////////////////////////////////////////
-BYTE CPSKMod::GetNextTuneSymbol(void)
+unsigned char CPSKMod::GetNextTuneSymbol(void)
 {
-BYTE symb;
+unsigned char symb;
 int ch;
 	ch = GetChar();			//get next character to xmit
 	switch( ch )
@@ -699,7 +698,7 @@ int ch;
 	{
 		case TX_OFF_STATE:		//is receiving
 			ch = TXOFF_CODE;		//else turn off
-			m_NeedShutoff = FALSE;
+			m_NeedShutoff = 0;
 			break;
 		case TX_TUNE_STATE:
 			ch = TXON_CODE;				// steady carrier
@@ -710,7 +709,7 @@ int ch;
 					m_TXState = TX_CWID_STATE;
 					m_SavedMode = m_PSKmode;
 					m_PSKmode = CW_MODE;
-					m_NeedCWid = FALSE;
+					m_NeedCWid = 0;
 					m_AmblePtr = 0;
 					ch = TXOFF_CODE;
 				}
@@ -719,20 +718,20 @@ int ch;
 					m_TXState = TX_OFF_STATE;
 					m_AmblePtr = 0;
 					ch = TXOFF_CODE;
-					m_NeedShutoff = FALSE;
+					m_NeedShutoff = 0;
 				}
 			}
 			break;
 		case TX_POSTAMBLE_STATE:		// ending sequence
 			if( !(ch = m_Postamble[m_AmblePtr++] ) || m_NoSquelchTail)
 			{
-				m_NoSquelchTail = FALSE;
+				m_NoSquelchTail = 0;
 				if(	m_NeedCWid  )
 				{
 					m_TXState = TX_CWID_STATE;
 					m_SavedMode = m_PSKmode;
 					m_PSKmode = CW_MODE;
-					m_NeedCWid = FALSE;
+					m_NeedCWid = 0;
 					m_AmblePtr = 0;
 					ch = TXOFF_CODE;
 				}
@@ -741,7 +740,7 @@ int ch;
 					m_TXState = TX_OFF_STATE;
 					m_AmblePtr = 0;
 					ch = TXOFF_CODE;
-					m_NeedShutoff = FALSE;
+					m_NeedShutoff = 0;
 				}
 			}
 			break;
@@ -760,7 +759,7 @@ int ch;
 				m_TXState = TX_OFF_STATE;
 				m_AmblePtr = 0;
 				ch = TXOFF_CODE;
-				m_NeedShutoff = FALSE;
+				m_NeedShutoff = 0;
 			}
 			else
 			{
@@ -805,15 +804,15 @@ void CPSKMod::PutTxQue(int txchar, int cntrl)
 		switch( txchar )
 		{
 			case TX_CNTRL_AUTOSTOP:
-				m_TempNeedShutoff = TRUE;
+				m_TempNeedShutoff = 1;
 				if( m_TXState==TX_TUNE_STATE )
-					m_NeedShutoff = TRUE;
+					m_NeedShutoff = 1;
 				break;
 			case TX_CNTRL_ADDCWID:
-				m_TempNeedCWid = TRUE;
+				m_TempNeedCWid = 1;
 				break;
 			case TX_CNTRL_NOSQTAIL:
-				m_TempNoSquelchTail = TRUE;
+				m_TempNoSquelchTail = 1;
 				break;
 		}
 	}
@@ -869,18 +868,18 @@ int ch;
 	}
 	if(m_TempNeedShutoff)
 	{
-		m_TempNeedShutoff = FALSE;
-		m_NeedShutoff = TRUE;
+		m_TempNeedShutoff = 0;
+		m_NeedShutoff = 1;
 	}
 	if(m_TempNeedCWid)
 	{
-		m_TempNeedCWid = FALSE;
-		m_NeedCWid = TRUE;
+		m_TempNeedCWid = 0;
+		m_NeedCWid = 1;
 	}
 	if(m_TempNoSquelchTail)
 	{
-		m_TempNoSquelchTail = FALSE;
-		m_NoSquelchTail = TRUE;
+		m_TempNoSquelchTail = 0;
+		m_NoSquelchTail = 1;
 	}
 //	LeaveCriticalSection(&m_CriticalSection);
 	return ch;
@@ -892,10 +891,10 @@ void CPSKMod::ClrQue()
 //	EnterCriticalSection(&m_CriticalSection);
 	m_pTail = m_pHead = 0;
 //	LeaveCriticalSection(&m_CriticalSection);
-	m_NoSquelchTail = FALSE;
-	m_TempNeedCWid = FALSE;
-	m_TempNeedShutoff = FALSE;
-	m_TempNoSquelchTail = FALSE;
+	m_NoSquelchTail = 0;
+	m_TempNeedCWid = 0;
+	m_TempNeedShutoff = 0;
+	m_TempNoSquelchTail = 0;
 }
 
 
@@ -909,7 +908,7 @@ int CPSKMod::GetTXCharsRemaining()
 	return num;
 }
 
-void CPSKMod::SetCWIDSpeed(LONG speed)
+void CPSKMod::SetCWIDSpeed(long speed)
 {
 	if( (speed>=1) && (speed<=4) )
 		m_CWSetSpeed = speed;

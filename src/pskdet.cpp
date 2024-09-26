@@ -23,7 +23,6 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-#include "stdafx.h"
 #include "pskdet.h"
 #include "psktables.h"
 //#include "Pskcore.h"
@@ -79,11 +78,11 @@ CPSKDet::CPSKDet()
 	m_Fs = 8000;
 	m_IQPhzIndex = 0;
 	m_AFCmode = AFC_ON;
-	m_IMDValid = FALSE;
+	m_IMDValid = 0;
 	m_FreqError = 0.0;
 	m_RxMode = BPSK_MODE;
-	m_PSK63Mode = FALSE;
-	m_PSK125Mode = FALSE;
+	m_PSK63Mode = 0;
+	m_PSK125Mode = 0;
 	//(dec) 25-Aug-01 The stock setting is not getting translated. Need to set it explicitly.
 	//m_SquelchSpeed = SQMODESLOW;
 	m_SquelchSpeed = 75;
@@ -104,11 +103,11 @@ CPSKDet::~CPSKDet()
 /////////////////////////////////////////////////////////////////
 void CPSKDet::Init( int Fs )
 {
-WORD wTemp;
+unsigned short wTemp;
 int i;
 	m_Fs = Fs;
 // init circular delay lines.(data stays put and the pointers move)
-	for( WORD j=0; j<2048; j++)		//init inverse varicode lookup decoder table
+	for( unsigned short j=0; j<2048; j++)		//init inverse varicode lookup decoder table
 	{
 		m_VaricodeDecTbl[j] = 0;
 		for( i=0; i<256;i++)
@@ -119,7 +118,7 @@ int i;
 				wTemp >>= 1;
 			wTemp >>= 1;
 			if( wTemp == j)
-				m_VaricodeDecTbl[j] = (BYTE)i;
+				m_VaricodeDecTbl[j] = (unsigned char)i;
 		}
 	}
 //
@@ -129,7 +128,7 @@ int i;
 	m_SQLevel = 50;
 	m_BitPhasePos = 0.0;
 	m_BitAcc = 0;
-	m_LastBitZero = FALSE;
+	m_LastBitZero = 0;
 	m_SampCnt = 0;
 	m_OnCount = 0;
 	m_OffCount = 0;
@@ -150,10 +149,10 @@ int i;
 	m_FferrAve = 0.0;
 	m_QFreqError = 0.0;
 	m_LastPkPos = 0;
-	m_SQOpen = FALSE;
+	m_SQOpen = 0;
 	m_AFCTimer = 0;
-	m_AFCCaptureOn = FALSE;
-	m_FastAFCMode = FALSE;
+	m_AFCCaptureOn = 0;
+	m_FastAFCMode = 0;
 	m_NLPk = NLP_K;
 }
 
@@ -221,9 +220,9 @@ void CPSKDet::SetAFCLimit(int limit)
 	else
 		m_AFCmode = AFC_ON;
 	if(limit==3000)
-		m_FastAFCMode = TRUE;
+		m_FastAFCMode = 1;
 	else
-		m_FastAFCMode = FALSE;
+		m_FastAFCMode = 0;
 	m_AFClimit = (double)limit*PI2/m_SampleFreq;
 // calculate new limits around current receive frequency
 	m_AFCmax =  m_NCOphzinc + m_FreqError + m_AFClimit;
@@ -303,7 +302,7 @@ int CPSKDet::ProcPSKDet( double* pIn,int nSamples,int stride,char* result,int re
 		if(--m_AFCTimer <= 0)
 		{
 			m_AFCTimer = 0;
-			m_AFCCaptureOn = FALSE;
+			m_AFCCaptureOn = 0;
 			// calculate new limits around latest receive frequency
 			m_AFCmax =  m_NCOphzinc + m_AFClimit;
 			m_AFCmin =  m_NCOphzinc - m_AFClimit;
@@ -311,7 +310,7 @@ int CPSKDet::ProcPSKDet( double* pIn,int nSamples,int stride,char* result,int re
 				m_AFCmin = 0.0;
 		}
 		else
-			m_AFCCaptureOn = TRUE;
+			m_AFCCaptureOn = 1;
 	}
 	for( i = 0; i<nSamples*stride; i+=stride )	// put new samples into Queue
 	{
@@ -561,13 +560,13 @@ double mag;
 
 //////////////////////////////////////////////////////////////////////
 // Called at Fs/16 rate to calculate the symbol sync position
-// Returns TRUE if at center of symbol.
+// Returns 1 if at center of symbol.
 // Sums up the energy at each sample time, averages it, and picks the
 //   sample time with the highest energy content.
 //////////////////////////////////////////////////////////////////////
 int CPSKDet::SymbSync(_complex sample)
 {
-int Trigger=FALSE;
+int Trigger=0;
 double max;
 double energy;
 int BitPos = m_BitPos;
@@ -579,12 +578,12 @@ int BitPos = m_BitPos;
 		m_SyncAve[BitPos] = (1.0-1.0/82.0)*m_SyncAve[BitPos] + (1.0/82.0)*energy;
 		if( BitPos == m_PkPos )	// see if at middle of symbol
 		{
-			Trigger = TRUE;
+			Trigger = 1;
 			m_SyncArray[m_PkPos] = (int)(900.0*m_SyncAve[m_PkPos]);
 		}
 		else
 		{
-			Trigger = FALSE;
+			Trigger = 0;
 			m_SyncArray[BitPos] = (int)(750.0*m_SyncAve[BitPos]);
 		}
 		if( BitPos == HALF_TBL[m_NewPkPos] )	//don't change pk pos until
@@ -597,7 +596,7 @@ int BitPos = m_BitPos;
 	{									// here every symbol time
 		m_BitPhasePos = fmod(m_BitPhasePos, Ts);	//keep phase bounded
 		if((BitPos==15) && (m_PkPos==15))	//if missed the 15 bin before rollover
-			Trigger = TRUE;
+			Trigger = 1;
 		BitPos = 0;
 		max = -1e10;
 		for( int i=0; i<16; i++)		//find maximum energy pk
@@ -645,9 +644,9 @@ char CPSKDet::DecodeSymb(_complex newsamp)
 _complex vect;
 double angle;
 double energy;
-BYTE ch = 0;
+unsigned char ch = 0;
 int bit;
-int GotChar = FALSE;
+int GotChar = 0;
 	m_I1 = m_I0;		//form the multi delayed symbol samples
 	m_Q1 = m_Q0;
 	m_I0 = newsamp.x;
@@ -669,8 +668,8 @@ int GotChar = FALSE;
 	energy = sqrt(vect.x*vect.x + vect.y*vect.y)/1.0E3;
 	if( m_AGCave > 10.0 )
 	{
-		m_IQPhaseArray[m_IQPhzIndex++] = (LONG)(vect.x/energy);
-		m_IQPhaseArray[m_IQPhzIndex++] = (LONG)(vect.y/energy);
+		m_IQPhaseArray[m_IQPhzIndex++] = (long)(vect.x/energy);
+		m_IQPhaseArray[m_IQPhzIndex++] = (long)(vect.y/energy);
 	}
 	else
 	{
@@ -699,7 +698,7 @@ int GotChar = FALSE;
 			m_BitAcc &= 0x07FF;
 			ch = m_VaricodeDecTbl[m_BitAcc];
 			m_BitAcc = 0;
-			GotChar = TRUE;
+			GotChar = 1;
 		}
 	}
 	else
@@ -707,16 +706,16 @@ int GotChar = FALSE;
 		m_BitAcc <<= 1;
 		m_BitAcc |= bit;
 		if(bit==0)
-			m_LastBitZero = TRUE;
+			m_LastBitZero = 1;
 		else
-			m_LastBitZero = FALSE;
+			m_LastBitZero = 0;
 	}
 	if(GotChar && (ch!=0) && m_SQOpen )
 	{
 //		::PostMessage(m_hWnd, MSG_PSKCHARRDY, ch, m_RxChannel);
 		ret = ch;
 	}
-	GotChar = FALSE;
+	GotChar = 0;
 	return ret;
 }
 
@@ -810,9 +809,9 @@ double SqTimeK;
 
 	}
 	if(m_OnCount >2)
-		m_IMDValid = TRUE;
+		m_IMDValid = 1;
 	else
-		m_IMDValid = FALSE;
+		m_IMDValid = 0;
 //Debugint = m_Pcnt+m_Ncnt;
 
 	if( m_AGCave > 10.0 )
@@ -822,14 +821,14 @@ double SqTimeK;
 		else
 			m_SQLevel = 100 - (int)m_DevAve;
 		if (m_SQLevel >= m_SQThresh)
-			m_SQOpen = TRUE;
+			m_SQOpen = 1;
 		else
-			m_SQOpen = FALSE;
+			m_SQOpen = 0;
 	}
 	else
 	{
 		m_SQLevel = 0;
-		m_SQOpen = FALSE;
+		m_SQOpen = 0;
 	}
 	if(m_RxMode)
 	{

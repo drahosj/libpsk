@@ -30,9 +30,9 @@
 //  01 - DOT
 //  10 - DASH 
 //  11 - SPACE of two dot times
-const WORD CW_TABLE[59]=
+const unsigned short CW_TABLE[59]=
 {
-	0xF000,		// 1111 1100 0000 0000b  ( 32)       WORD SPACE
+	0xF000,		// 1111 1100 0000 0000b  ( 32)       unsigned short SPACE
 	0x0000,		// 0000 0000 0000 0000b  ( 33)  !
 	0x0000,		// 0000 0000 0000 0000b  ( 34)  "
 	0x0000,		// 0000 0000 0000 0000b  ( 35)  #
@@ -94,7 +94,7 @@ const WORD CW_TABLE[59]=
 };
 
 // each character is separated by two zeros. The bits are sent msbit first.
-const WORD VARICODE_TABLE[256] = { 
+const unsigned short VARICODE_TABLE[256] = { 
 	0xAAC0,	// ASCII =   0	1010101011
 	0xB6C0,	// ASCII =   1	1011011011
 	0xBB40,	// ASCII =   2	1011101101
@@ -370,7 +370,7 @@ const WORD VARICODE_TABLE[256] = {
 //                                g0(x)
 //
 // Lookup table to get symbol from non-inverted data stream
-static const BYTE ConvolutionCodeTable[32] = 
+static const unsigned char ConvolutionCodeTable[32] = 
 {
 	2, 1, 3, 0, 3, 0, 2, 1,
 	0, 3, 1, 2, 1, 2, 0, 3,
