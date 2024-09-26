@@ -791,9 +791,10 @@ double SqTimeK;
 				m_DevAve=  (1.0-1.0/SqTimeK)*m_DevAve + (1.0/SqTimeK)*temp;
 			else
 				m_DevAve=  (1.0-1.0/(SqTimeK*2.0))*m_DevAve + (1.0/(SqTimeK*2.0))*temp;
-			if(m_OffCount > 20 )	// fast squelch counter
+			if(m_OffCount > 20 ) {// fast squelch counter
 				if( BPSK_MODE==m_RxMode ) //if BPSK
 					m_DevAve = 100.0 - 0.0;		//set to 0%
+			}
 			else
 				m_OffCount++;
 			m_OnCount = 0;

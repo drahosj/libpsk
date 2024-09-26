@@ -796,7 +796,7 @@ int ch;
 ////////////////////////////////////////////////////////////////////////////
 //		TX Queueing routines
 /////////////////////////////////////////////////////////////////////////////
-void CPSKMod::PutTxQue(int txchar, int cntrl)
+int CPSKMod::PutTxQue(int txchar, int cntrl)
 {
 //	EnterCriticalSection(&m_CriticalSection);
 	if( cntrl )	//is a tx control code
@@ -820,6 +820,9 @@ void CPSKMod::PutTxQue(int txchar, int cntrl)
 	{
 		if( (txchar != BACK_SPACE_CODE) || (m_pHead==m_pTail) )
 		{
+			if (((m_pHead + 1) % TX_BUF_SIZE) == m_pTail) {
+				return -1;
+			}
 			m_pXmitQue[m_pHead++] = txchar;	
 			if( m_pHead >= TX_BUF_SIZE )
 				m_pHead = 0;
@@ -839,6 +842,7 @@ void CPSKMod::PutTxQue(int txchar, int cntrl)
 		}
 	}
 //	LeaveCriticalSection(&m_CriticalSection);
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

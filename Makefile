@@ -6,7 +6,7 @@ LINK=c++
 OPTIONS=-g -fPIC -std=gnu++11
 
 INCLUDES=-Iinc
-CFLAGS="-DPSKCORE_EXPORTS"
+CFLAGS=-Wall -Wextra -Werror -Wno-unused
 COMPILE=$(CC) $(CFLAGS) $(INCLUDES)
 
 PROGRAM=libpsk.so
@@ -34,7 +34,7 @@ libpsk.o
 _HEADERS=$(addprefix inc/,$(HEADERS))
 _SOURCES=$(addprefix inc/,$(HEADERS))
 
-all: $(PROGRAM) $(_HEADERS) $(_SOURCES) doc
+all: $(PROGRAM) $(_HEADERS) $(_SOURCES)
 
 $(PROGRAM): $(OBJS)
 	$(LINK) -shared -z noexecstack -o $(PROGRAM) $(OBJS) $(LIBS)

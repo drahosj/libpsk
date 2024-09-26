@@ -52,26 +52,6 @@ void runTx(void * mod, int sec)
     }
 }
 
-void runRx(void * det, int sec)
-{
-    for(auto i = 0; i < (8 * sec); i++) {
-        byte[2000] _ibuf;
-        auto ibuf = stdin.rawRead(_ibuf);
-        assert(ibuf.length % 2 == 0, "Odd number of samples");
-        double[1000] _data;
-        auto data = _data[0..ibuf.length / 2];
-        for(auto j = 0; j < ibuf.length; j += 2) {
-            auto s = cast(short) ((ibuf[j] & 0xff) | (ibuf[j + 1] << 8));
-            data[j / 2] = cast(double) s;
-        }
-        char[1000] _res;
-        auto res = _res[0..data.length];
-        auto len = det.runPSKDet(data.ptr, cast(int) data.length, 1, 
-                res.ptr, cast(int) res.length);
-        write(res[0..len]);
-        stdout.flush();
-    }
-}
 */
 
 /**
@@ -84,19 +64,30 @@ int main(int argc, char ** argv)
 {
     setbuf(stdout, NULL);
     setbuf(stdin, NULL);
-    if (argc > 1 && strcmp(argv[1], "tx")) {
-        /* IGNORE - Old code 
-        void * mod = createPSKMod(8000, 1.0);
-        mod.SetTXFrequency(800);
-
-        mod.runTx(2);
-
-        foreach(c; "Test PSK Message\n"){
-            mod.PutTxQue(c);
+    if (argc > 1 && !strcmp(argv[1], "tx")) {
+        PSK_MOD mod = psk_m_create(8000, 1000, PSK_MODE_PSK31, 0);
+        int16_t buf[1000];
+        for (int i = 0; i < 10; i++) {
+            psk_m_run(mod, buf, 1000, 1);
+            fwrite(buf, 1, 1000, stdout);
         }
-
-        mod.runTx(8);
-        */
+        psk_m_puts(mod, "Hello ");
+        for (int i = 0; i < 10; i++) {
+            psk_m_run(mod, buf, 1000, 1);
+            fwrite(buf, 1, 1000, stdout);
+        }
+        psk_m_puts(mod, "This is a fairly long string and probably won't all go at once");
+        for (int i = 0; i < 10; i++) {
+            psk_m_run(mod, buf, 1000, 1);
+            fwrite(buf, 1, 1000, stdout);
+        }
+        psk_m_puts(mod, ". More stuff");
+        for (int i = 0; i < 100; i++) {
+            psk_m_run(mod, buf, 1000, 1);
+            fwrite(buf, 1, 1000, stdout);
+        }
+        
+        psk_m_free(mod);
     } else {
         /* Instantiate  detector with 8kHz sample rate,
          * 800 Hz center frequency, and sane defaults
@@ -128,6 +119,8 @@ int main(int argc, char ** argv)
                 putchar(obuf[j]);
             }
         }
+        
+        psk_d_free(det);
         
     }
 

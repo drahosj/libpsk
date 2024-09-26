@@ -57,7 +57,7 @@ public:
 // PSK31 and CW modulator
 	void InitPSKMod(int Fs, double MaxAmplitude);
 	void CalcPSK( double* pData , int n, int stride);
-	void PutTxQue(int txchar, int cntrl );
+	int PutTxQue(int txchar, int cntrl );
 	void ClrQue();
 	void SetCWIDSpeed(long speed);
 	int GetTXCharsRemaining();

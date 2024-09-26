@@ -45,6 +45,10 @@
 #define PSK_AFC_OFF 0
 #define PSK_AFC_DEF -1
 
+#define PSK_MOD_AUTOSTOP 1
+#define PSK_MOD_ADDCWID 2
+#define PSK_MOD_NOSQLTAIL 4
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -116,6 +120,64 @@ void psk_d_set_afc(PSK_DET det, int limit);
  */
 int psk_d_run(PSK_DET det, int16_t * in_buf, int samples, 
 				int stride, char * res, int res_len);
+
+/**
+ * \brief Free RX
+ * 
+ * \param det Detector instance
+ */
+void psk_d_free(PSK_DET det);
+
+/**
+ * \brief Create modulator
+ * 
+ * \param fs Sample rate
+ * \param frequency Center frequency
+ * \param mode PSK mode (PSK_MODE_BPSK31)
+ * \param flags PSK_TX_AUTOSTOP | PSK_TX_ADDCWID | PSK_TX_NOSQLTAIL
+ * 
+ * \return Allocated PSK_MOD
+ */
+PSK_MOD psk_m_create(int fs, int frequency, int mode, int flags);
+
+/**
+ * \brief Add character to TX queue
+ * 
+ * \param mod Modulator instance
+ * \param c Character
+ * 
+ * \return 0 on success, -1 if queue full
+ */
+int psk_m_putchar(PSK_MOD mod, int c);
+
+/**
+ * \brief Add string to TX queue
+ * 
+ * \param mod Modulator instance
+ * \param s Null-terminated string
+ * 
+ * \return Number of characters successfully added
+ */
+int psk_m_puts(PSK_MOD mod, char * s);
+
+/**
+ * \brief Run modulator
+ * 
+ * Creates `samples` samples in buffer, interlaced by `stride`.
+ * 
+ * Buffer should have room for at least `samples * stride` samples
+ * 
+ * \param mod Modulator instance
+ * \param buf Sample output buffer
+ * \param samples Number of samples to process
+ * \param stride Interlace samples (default 1 for mono)
+ */
+void psk_m_run(PSK_MOD mod, int16_t * buf, int samples, int stride);
+
+/**
+ * \brief Deallocate modulator
+ */
+void psk_m_free(PSK_MOD mod);
 
 #ifdef __cplusplus
 }

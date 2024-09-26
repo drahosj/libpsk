@@ -3,4 +3,6 @@
 *.so
 *.a
 test/test
+test/pskrecv
+test/psktran
 doc
